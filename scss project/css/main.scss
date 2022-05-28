@@ -1,0 +1,15 @@
+@import "./abstract/constant";
+@import "./abstract/mixins";
+@import "./abstract/variable";
+@import "./base/typography";
+*{
+    margin:0;
+    background-color: $primary-color;
+}
+
+body{
+    &__container{
+        width: 100%;
+    }
+    @include flex(space-evenly);
+}

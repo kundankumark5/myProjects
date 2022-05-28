@@ -1,0 +1,5 @@
+@mixin flex($value) {
+    display: flex;
+    justify-content: $value;
+    
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Health Declaration Form</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body style="font-size: 12px; margin:1px; padding:5px">
+    <div class="container" style="border:1px solid black ; padding-left: 10px; width:696px; margin: 0 auto;">
+    <h1 align="center">Health Declaration Form</h1>
+	<div id = "question" align="center">
+	<#assign keys = questions?keys>
+	<#list keys as key>
+   	<h3>${key}</h3>
+   	${questions[key]} 
+   	<br>
+     </#list> 
+      	<table width="696" border="0" cellspacing="0" cellpadding="0">
+   	  <tbody>
+   	    <tr>
+   	      <td><h3>Emergency Contact Details</h3></td>
+        </tr>
+      </tbody>
+ 	  </table>
+     <table>
+     		
+			<tr>
+    			<th width="100"></th>
+    			<th align = "left">FirstName</th>
+    			<th align = "left">LastName</th>
+  			</tr>
+  			<tr>
+    			<td>
+    				<p align = "left">${title} </p>
+				</td>
+    			<td>
+    				<p align = "left">${first_name} </p>    				
+  				</td>
+    			<td>
+    				<p align = "left">${last_name} </p>  
+  				</td>
+  			</tr>
+  		</table>
+  		<table>
+			<tr>
+    			<th width="100"></th>
+    			<th>Phone Number</th>
+    			<th>Email Id</th>
+  			</tr>
+  			<tr>
+    			<td>
+    				<p align = "left">${code} </p> 
+    				
+				</td>
+    			<td>
+    				<p align = "left">${phone_number} </p> 
+  				</td>
+    			<td>
+    				<p align = "left">${email} </p> 
+  				</td>
+  			</tr>
+  		</table>
+  		
+  	<div id = "confirmation">	
+  	<#assign confirmkeys = confirmation?keys>
+	<#list confirmkeys as key>
+   	<h3><p>${key}</p></h3>
+   	${confirmation[key]}
+   	<br>
+   	</#list>
+   	</div>
+  		
+  		
+  	<#assign signkeys = sign?keys>
+	<#list signkeys as signkey>
+   	<h3><p>${signkey}</p></h3>
+   	</#list> 
+   	<img src = ${sign_url} 
+   	width="200" height="50">
+   	
+  	<br>	
+	</div>
+	
+</body>
+</html>

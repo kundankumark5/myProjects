@@ -1,0 +1,258 @@
+/* bling.js */
+
+window.$ = document.querySelectorAll.bind(document);
+
+Node.prototype.on = window.on = function (name, fn) {
+  this.addEventListener(name, fn);
+};
+
+NodeList.prototype.__proto__ = Array.prototype;
+
+NodeList.prototype.on = NodeList.prototype.addEventListener = function (name, fn) {
+  this.forEach(function (elem, i) {
+    elem.on(name, fn);
+  });
+};
+;
+/*! a11y-dialog 7.4.0 — © Kitty Giraudel */
+!function(t,e){"object"==typeof exports&&"undefined"!=typeof module?module.exports=e():"function"==typeof define&&define.amd?define(e):(t="undefined"!=typeof globalThis?globalThis:t||self).A11yDialog=e()}(this,(function(){"use strict";var t=['a[href]:not([tabindex^="-"])','area[href]:not([tabindex^="-"])','input:not([type="hidden"]):not([type="radio"]):not([disabled]):not([tabindex^="-"])','input[type="radio"]:not([disabled]):not([tabindex^="-"])','select:not([disabled]):not([tabindex^="-"])','textarea:not([disabled]):not([tabindex^="-"])','button:not([disabled]):not([tabindex^="-"])','iframe:not([tabindex^="-"])','audio[controls]:not([tabindex^="-"])','video[controls]:not([tabindex^="-"])','[contenteditable]:not([tabindex^="-"])','[tabindex]:not([tabindex^="-"])'];function e(t){this._show=this.show.bind(this),this._hide=this.hide.bind(this),this._maintainFocus=this._maintainFocus.bind(this),this._bindKeypress=this._bindKeypress.bind(this),this.$el=t,this.shown=!1,this._id=this.$el.getAttribute("data-a11y-dialog")||this.$el.id,this._previouslyFocused=null,this._listeners={},this.create()}function i(t,e){return i=(e||document).querySelectorAll(t),Array.prototype.slice.call(i);var i}function n(t){(t.querySelector("[autofocus]")||t).focus()}function s(){i("[data-a11y-dialog]").forEach((function(t){new e(t)}))}return e.prototype.create=function(){return this.$el.setAttribute("aria-hidden",!0),this.$el.setAttribute("aria-modal",!0),this.$el.setAttribute("tabindex",-1),this.$el.hasAttribute("role")||this.$el.setAttribute("role","dialog"),this._openers=i('[data-a11y-dialog-show="'+this._id+'"]'),this._openers.forEach(function(t){t.addEventListener("click",this._show)}.bind(this)),this._closers=i("[data-a11y-dialog-hide]",this.$el).concat(i('[data-a11y-dialog-hide="'+this._id+'"]')),this._closers.forEach(function(t){t.addEventListener("click",this._hide)}.bind(this)),this._fire("create"),this},e.prototype.show=function(t){return this.shown||(this._previouslyFocused=document.activeElement,this.$el.removeAttribute("aria-hidden"),this.shown=!0,n(this.$el),document.body.addEventListener("focus",this._maintainFocus,!0),document.addEventListener("keydown",this._bindKeypress),this._fire("show",t)),this},e.prototype.hide=function(t){return this.shown?(this.shown=!1,this.$el.setAttribute("aria-hidden","true"),this._previouslyFocused&&this._previouslyFocused.focus&&this._previouslyFocused.focus(),document.body.removeEventListener("focus",this._maintainFocus,!0),document.removeEventListener("keydown",this._bindKeypress),this._fire("hide",t),this):this},e.prototype.destroy=function(){return this.hide(),this._openers.forEach(function(t){t.removeEventListener("click",this._show)}.bind(this)),this._closers.forEach(function(t){t.removeEventListener("click",this._hide)}.bind(this)),this._fire("destroy"),this._listeners={},this},e.prototype.on=function(t,e){return void 0===this._listeners[t]&&(this._listeners[t]=[]),this._listeners[t].push(e),this},e.prototype.off=function(t,e){var i=(this._listeners[t]||[]).indexOf(e);return i>-1&&this._listeners[t].splice(i,1),this},e.prototype._fire=function(t,e){var i=this._listeners[t]||[],n=new CustomEvent(t,{detail:e});this.$el.dispatchEvent(n),i.forEach(function(t){t(this.$el,e)}.bind(this))},e.prototype._bindKeypress=function(e){this.$el.contains(document.activeElement)&&(this.shown&&27===e.which&&"alertdialog"!==this.$el.getAttribute("role")&&(e.preventDefault(),this.hide(e)),this.shown&&9===e.which&&function(e,n){var s=function(e){return i(t.join(","),e).filter((function(t){return!!(t.offsetWidth||t.offsetHeight||t.getClientRects().length)}))}(e),o=s.indexOf(document.activeElement);n.shiftKey&&0===o?(s[s.length-1].focus(),n.preventDefault()):n.shiftKey||o!==s.length-1||(s[0].focus(),n.preventDefault())}(this.$el,e))},e.prototype._maintainFocus=function(t){!this.shown||t.target.closest('[aria-modal="true"]')||t.target.closest("[data-a11y-dialog-ignore-focus-trap]")||n(this.$el)},"undefined"!=typeof document&&("loading"===document.readyState?document.addEventListener("DOMContentLoaded",s):window.requestAnimationFrame?window.requestAnimationFrame(s):window.setTimeout(s,16)),e}));
+;
+;(function (scope) {
+  scope.evalClientResolution = function evalClientResolution(size) {
+    return window.matchMedia('(min-width: ' + size + 'px)').matches
+  }
+
+  scope.getDocumentHeight = function getDocumentHeight() {
+    return (
+      window.innerHeight || document.clientHeight || document.body.clientHeight
+    )
+  }
+
+  scope.getDocumentScrollTop = function getDocumentScrollTop() {
+    return document.documentElement.scrollTop || document.body.scrollTop
+  }
+
+  scope.getOffset = function getOffset(elem) {
+    var offset = 0
+
+    do {
+      if (!isNaN(elem.offsetTop)) offset += elem.offsetTop
+    } while ((elem = elem.offsetParent)) // eslint-disable-line
+
+    return offset
+  }
+})(window)
+;
+/* globals $ */
+
+;(function (scope) {
+  'use strict'
+
+  // DOM queries
+  var tableOfContents = $('.toc')[0]
+  var footer = $('.footer')[0]
+  var headings = $('.chapter:not(.toc) > h2[id]')
+
+  // Internal variables
+  var addOffsetView = 50
+  var isLargerThanMobile = scope.evalClientResolution(975)
+  var headingsOffset = headings.map(function (heading) {
+    return [heading, scope.getOffset(heading)]
+  })
+
+  var evalHeadingsPosition = function () {
+    var scrollTop = scope.getDocumentScrollTop() + addOffsetView
+
+    if (isLargerThanMobile) {
+      // Loop over all headings offsets & compare scrollTop if already passed a value.
+      for (var i = 0, offsets = headingsOffset.length; i < offsets; i++) {
+        var headingPassed =
+          scrollTop >= headingsOffset[i][1] &&
+          headingsOffset[i + 1] &&
+          scrollTop < headingsOffset[i + 1][1]
+        var lastHeading =
+          headingsOffset[i] === headingsOffset[offsets - 1] &&
+          scrollTop >= headingsOffset[i][1]
+
+        if (headingPassed) {
+          highlightTableOfContents(headingsOffset[i])
+        } else if (lastHeading) {
+          highlightTableOfContents(headingsOffset[offsets - 1])
+        }
+      }
+    }
+  }
+
+  var adjustTableOfContents = function () {
+    var top = scope.getOffset(tableOfContents)
+    var bottom = scope.getOffset(footer)
+    var current = scope.getDocumentScrollTop()
+    var topFn = current > top ? 'add' : 'remove'
+    var bottomFn =
+      current + scope.getDocumentHeight() > bottom ? 'add' : 'remove'
+
+    tableOfContents.classList[topFn]('sticky')
+    tableOfContents.classList[bottomFn]('sticky-bottom')
+  }
+
+  var highlightTableOfContents = function (heading) {
+    var tocElem = tableOfContents.querySelector(
+      'a[href="#' + heading[0].id + '"]'
+    )
+    var inViewportElem = tableOfContents.querySelector('.in-viewport')
+
+    if (!!tocElem && !tocElem.classList.contains('in-viewport')) {
+      inViewportElem && inViewportElem.classList.remove('in-viewport')
+      tocElem.classList.add('in-viewport')
+    }
+  }
+
+  // Bind listeners
+  document.addEventListener('scroll', adjustTableOfContents, false)
+  window.addEventListener('scroll', evalHeadingsPosition, false)
+  window.addEventListener('resize', scope.evalClientResolution.bind(975), false)
+
+  // Initial test
+  evalHeadingsPosition()
+  adjustTableOfContents()
+})(window)
+;
+/* globals $ */
+
+;(function () {
+  'use strict'
+
+  function getTemplateContent(id) {
+    const template = document.getElementById(id)
+    return template.content.firstElementChild.cloneNode(true)
+  }
+
+  function getChapterHeading(chapter) {
+    return chapter.querySelector('h2[id]')
+  }
+
+  function getChapterName(chapter) {
+    return chapter.id.split('chapter-')[1]
+  }
+
+  function getCurrentLocale() {
+    return document.documentElement.getAttribute('lang')
+  }
+
+  function getChapterEditUrl(chapter) {
+    var BASE_URL =
+      'https://github.com/KittyGiraudel/sass-guidelines/tree/main/pages'
+    var locale = getCurrentLocale()
+    var fileName = '_' + getChapterName(chapter) + '.md'
+
+    return [BASE_URL, locale, fileName].join('/')
+  }
+
+  function createChapterLinks(chapter, heading) {
+    var editLink = getTemplateContent('svg-pencil-tpl')
+    var chapterLink = getTemplateContent('svg-link-tpl')
+    var wrapper = document.createElement('div')
+    var title = heading.innerText || heading.textContent
+
+    editLink.href = getChapterEditUrl(chapter)
+    chapterLink.href = '#' + heading.id
+    editLink.querySelector('.sr-only').innerHTML += ' ' + title
+    chapterLink.querySelector('.sr-only').innerHTML += ' ' + title
+
+    wrapper.classList.add('button-wrapper', 'chapter__buttons')
+    wrapper.appendChild(chapterLink)
+    wrapper.appendChild(editLink)
+
+    return wrapper
+  }
+
+  function redirectUrl(event) {
+    window.location.href = this.value
+  }
+
+  function initialiseLanguagePicker() {
+    var languagePicker = document.querySelector('#language-picker')
+
+    languagePicker.on('change', redirectUrl, false)
+  }
+
+  function initialiseSyntaxToggle() {
+    var syntaxToggle = $('input[name="syntax"]')
+
+    syntaxToggle.on('click', function (event) {
+      var fn = this.value === 'sass' ? 'add' : 'remove'
+      document.body.classList[fn]('sass')
+    })
+  }
+
+  function replaceSidebarOpener(link) {
+    var button = document.createElement('button')
+
+    button.setAttribute('type', 'button')
+    button.setAttribute('data-a11y-dialog-show', 'options-panel')
+    button.setAttribute('class', link.getAttribute('class'))
+    button.innerHTML = link.innerHTML
+
+    link.parentNode.replaceChild(button, link)
+  }
+
+  function initialiseOptionsPanel() {
+    $('a[href="#options-panel"]').forEach(replaceSidebarOpener)
+
+    var dialog = new A11yDialog(document.querySelector('#options-panel'))
+
+    dialog
+      .on('show', function (el) {
+        el.classList.add('is-open')
+      })
+      .on('hide', function (el) {
+        el.classList.remove('is-open')
+      })
+  }
+
+  function initialiseChapters() {
+    var chapters = $('.chapter:not(.toc)')
+
+    chapters.forEach(function (chapter) {
+      var heading = getChapterHeading(chapter)
+
+      heading.parentNode.insertBefore(
+        createChapterLinks(chapter, heading),
+        heading.nextSibling
+      )
+    })
+  }
+
+  document.addEventListener('DOMContentLoaded', function (event) {
+    initialiseLanguagePicker()
+    initialiseSyntaxToggle()
+    initialiseOptionsPanel()
+    initialiseChapters()
+  })
+})()
+;
+;(function () {
+  'use strict'
+
+  // Install service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+      .register('/service-worker.js', { scope: '/' })
+      .then(function (registration) {
+        console.log(
+          '%cserviceworker:registration',
+          'color:green',
+          `successful with scope: ${registration.scope}`
+        )
+      })
+      .catch(function (error) {
+        console.error(
+          '%cserviceworker:registration',
+          'color:red',
+          'failed: ',
+          error
+        )
+      })
+  }
+})()
+;

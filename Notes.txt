@@ -1,0 +1,3 @@
+* Position Sticky doesn't work until we set top bottom left right(all or either one at least).
+*Margin left auto and margin left auto works only with display block;
+*
